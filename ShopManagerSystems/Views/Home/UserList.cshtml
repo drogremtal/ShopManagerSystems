@@ -1,0 +1,25 @@
+﻿@page
+@model List<DataLayer.DataLayer.User>
+@{
+    ViewBag.Title = "Все клиенты";
+}
+
+<a asp-action='Create'>Добавить пользователя</a>
+<table class='table'>
+
+        <tr>
+            <th>ID</th>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.LastName</td>
+                <td>@item.FirstName</td>
+                <td>@item.Patronic</td>
+            </tr>
+        }
+</table>

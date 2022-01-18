@@ -12,6 +12,7 @@
             <th>Фамилия</th>
             <th>Имя</th>
             <th>Отчество</th>
+            <th></th>
         </tr>
         @foreach (var item in Model)
         {
@@ -20,6 +21,11 @@
                 <td>@item.LastName</td>
                 <td>@item.FirstName</td>
                 <td>@item.Patronic</td>
+                <td>
+                    <a asp-action="Details"  asp-controller="Home" asp-route-id="@item.Id">Детали</a>
+                    <a asp-action="Edit"  asp-controller="Home" asp-route-id="@item.Id">Изменить</a>
+                    <a asp-action="GetCheck"  asp-controller="Home" asp-route-id="@item.Id">Получить чек</a>
+                </td>
             </tr>
         }
 </table>

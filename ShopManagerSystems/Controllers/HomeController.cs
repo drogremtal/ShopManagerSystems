@@ -4,6 +4,8 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using DataLayer;
 using DataLayer.DataLayer;
+using AutoMapper;
+using ShopManagerSystems.ViewModel;
 
 namespace ShopManagerSystems.Controllers
 {
@@ -35,11 +37,29 @@ namespace ShopManagerSystems.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateUser(User user) {
+        public IActionResult CreateUser(User user)
+        {
 
             _DB.User.Add(user);
             _DB.SaveChanges();
             return RedirectToAction("UserList");
+        }
+
+        public IActionResult Details(int id)
+        {
+            var user = _DB.User.Find(id);
+            var userDetails = _DB.UserInformation.Find(user.Id);
+
+            var config = new MapperConfiguration(src => src.CreateMap<User, UserDetailsViewModel>()
+            .ForMember(pr => pr.UserId, opt => opt.MapFrom(q => q.Id))
+            .ForMember(pr => pr.LastName, opt => opt.MapFrom(q => q.LastName))
+            .ForMember(pr => pr.FirstName, opt => opt.MapFrom(q => q.FirstName))
+            .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.Patronic))
+            );
+
+            var userDetailsViewModel = 
+            return View(user);
+
         }
 
 

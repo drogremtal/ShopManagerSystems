@@ -1,10 +1,10 @@
-﻿@page
-@model List<DataLayer.DataLayer.User>
+﻿
+@model IEnumerable<DataLayer.DataLayer.User>
 @{
     ViewBag.Title = "Все клиенты";
 }
 
-<a asp-action='Create'>Добавить пользователя</a>
+<a asp-action='CreateUser'>Добавить пользователя</a>
 <table class='table'>
 
         <tr>

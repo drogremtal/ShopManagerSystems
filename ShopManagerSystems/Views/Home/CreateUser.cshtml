@@ -1,5 +1,4 @@
-﻿@page
-@model DataLayer.DataLayer.User
+﻿@model DataLayer.DataLayer.User
 @{
     ViewBag.Title = "Создать пользователя";
 }
@@ -16,5 +15,8 @@
         <div class="form-group">
         <label asp-for="Patronic" class="control-label">Отчесво</label>
         <input type="text" asp-for="Patronic" class="form-control"/>
+    </div>
+        <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
     </div>
 </form>

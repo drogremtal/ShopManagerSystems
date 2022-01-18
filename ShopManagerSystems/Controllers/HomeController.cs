@@ -28,13 +28,17 @@ namespace ShopManagerSystems.Controllers
             var UsersList = _DB.User.ToList();
             return View(UsersList);
         }
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
 
         [HttpPost]
-        public IActionResult Create(User user) {
+        public IActionResult CreateUser(User user) {
 
             _DB.User.Add(user);
             _DB.SaveChanges();
-
             return RedirectToAction("UserList");
         }
 

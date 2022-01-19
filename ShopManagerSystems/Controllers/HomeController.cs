@@ -39,7 +39,6 @@ namespace ShopManagerSystems.Controllers
         [HttpPost]
         public IActionResult CreateUser(User user)
         {
-
             _DB.User.Add(user);
             _DB.SaveChanges();
             return RedirectToAction("UserList");
@@ -50,19 +49,26 @@ namespace ShopManagerSystems.Controllers
             var user = _DB.User.Find(id);
             var userDetails = _DB.UserInformation.Find(user.Id);
 
-            var config = new MapperConfiguration(src => src.CreateMap<User, UserDetailsViewModel>()
-            .ForMember(pr => pr.UserId, opt => opt.MapFrom(q => q.Id))
-            .ForMember(pr => pr.LastName, opt => opt.MapFrom(q => q.LastName))
-            .ForMember(pr => pr.FirstName, opt => opt.MapFrom(q => q.FirstName))
-            .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.Patronic))
-            );
+            var config = new MapperConfiguration(cfg=>{
+                cfg.CreateMap<User, UserDetailsViewModel>()
+               .ForMember(pr => pr.UserId, opt => opt.MapFrom(q => q.Id))
+               .ForMember(pr => pr.LastName, opt => opt.MapFrom(q => q.LastName))
+               .ForMember(pr => pr.FirstName, opt => opt.MapFrom(q => q.FirstName))
+               .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.Patronic));
+                cfg.CreateMap<UserInformation, UserDetailsViewModel>()
+                .ForMember(pr => pr.BirthDate, opt => opt.MapFrom(q => q.BirthDate))
+                .ForMember(pr => pr.Email, opt => opt.MapFrom(q => q.Email))
+                .ForMember(pr => pr.PhoneNum, opt => opt.MapFrom(q => q.PhoneNum));
+            }) ;
 
-            /*var userDetailsViewModel = 
-            Дописать надо
+
+            var map = new Mapper(config);
+
+
+            var userDetailsViewModel = map.Map<User, UserDetailsViewModel>(user);
+            map.Map(userDetails, userDetailsViewModel);
             
-            */
-            return View(user);
-
+            return View(userDetailsViewModel);
         }
 
 

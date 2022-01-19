@@ -57,7 +57,10 @@ namespace ShopManagerSystems.Controllers
             .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.Patronic))
             );
 
-            var userDetailsViewModel = 
+            /*var userDetailsViewModel = 
+            Дописать надо
+            
+            */
             return View(user);
 
         }

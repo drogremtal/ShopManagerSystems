@@ -1,2 +1,28 @@
-﻿@model DataLayer.DataLayer.User
+﻿@model ShopManagerSystems.ViewModel.UserDetailsViewModel
+@{
+    ViewBag.Title = "Дополнительная информация";
+}
 
+
+<h2>Пользователь</h2>
+
+<div class="container">
+   <table>
+       <tr>
+           <td class="">Id</td>
+           <td>@Model.UserId</td>
+       </tr>
+       <tr>
+            <td>Фамилия</td>
+            <td>@Model.LastName</td>
+       </tr>
+       <tr>
+           <td>Имя</td>
+           <td>@Model.FirstName</td>
+       </tr>
+       <tr>
+           <td>Отчество</td>
+           <td>@Model.PatronicName</td>
+       </tr>
+   </table>
+</div>

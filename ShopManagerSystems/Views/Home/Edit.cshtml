@@ -1,9 +1,10 @@
-﻿@model DataLayer.DataLayer.User
+﻿@model ShopManagerSystems.ViewModel.UserDetailsViewModel
+
 @{
-    ViewBag.Title = "Создать пользователя";
+    ViewBag.Title = "Рекдактировать пользователя";
 }
 
-<form asp-action="CreateUser" asp-controller="Home">
+<form asp-action="Edit" asp-controller="Home">
     <div class="form-group">
         <label asp-for="LastName" class="control-label">Фамилия</label>
         <input type="text" asp-for="LastName" class="form-control"/>
@@ -13,10 +14,13 @@
         <input type="text" asp-for="FirstName" class="form-control"/>
     </div>
         <div class="form-group">
-        <label asp-for="Patronic" class="control-label">Отчесво</label>
-        <input type="text" asp-for="Patronic" class="form-control"/>
+        <label asp-for="PatronicName" class="control-label">Отчесво</label>
+        <input type="text" asp-for="PatronicName" class="form-control"/>
     </div>
         <div class="form-group">
         <input type="submit" value="Сохранить" class="btn btn-default" />
     </div>
     </form>
+
+}
+

@@ -13,6 +13,6 @@ namespace DataLayer.DataLayer
         public int UserID { get; set; }
         public string Email{ get; set; }
         public string PhoneNum{ get; set; }
-        public DateTime  BirthDate{ get; set; }
+        public string BirthDate{ get; set; }
     }
 }

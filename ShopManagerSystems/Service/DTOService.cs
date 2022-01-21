@@ -1,23 +1,16 @@
-﻿using ShopManagerSystems.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataLayer;
-using DataLayer.DataLayer;
+﻿using DataLayer;
+using ShopManagerSystems.ViewModel;
 
-namespace BusinessLayer.Service
+namespace ShopManagerSystems.Service
 {
-    public class UserService
+    public class DTOService
     {
         private readonly ApplicationDBContext _DB;
 
-        public UserService(ApplicationDBContext dBContex)
+        public DTOService(ApplicationDBContext dBContex)
         {
             _DB = dBContex;
         }
-
         public UserDetailsViewModel GetDetailsViewModel(int userID)
         {
             var userDetailsViewModel = from u in _DB.User

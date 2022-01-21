@@ -1,0 +1,30 @@
+﻿@model DataLayer.DataLayer.Check
+
+@{
+    ViewBag.Title = "Создание чека";
+}
+<h3>@ViewBag.Title</h3>
+<form asp-action="CreateCheck" asp-controller="Home">
+    <input type="hidden" asp-for = "UserId" value ="@Model.UserId" />
+    <input type="hidden" asp-for = "Id" value ="@Model.Id" />
+    <div class="row g-3">
+        <div class="form-group col-md-4">
+            <label asp-for="Date" class="control-label">Дата</label>
+            <input type="date" asp-for="Date" class="form-control" />
+        </div>
+        <div class="form-group col-md-4">
+            <label asp-for="Summa" class="control-label">Сумма</label>
+            <input type="text" asp-for="Summa" class="form-control" />
+        </div>
+    </div>
+       <div class="form-group col-md-8">
+        <label asp-for="FileLink" class="control-label">Добавить файл</label>
+        <input type="File" asp-for="FileLink" class="form-control" />
+    </div>
+    <br />
+    <div class="form-group col-12">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+
+</form>
+

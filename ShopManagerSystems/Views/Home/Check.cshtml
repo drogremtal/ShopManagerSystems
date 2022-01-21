@@ -1,0 +1,27 @@
+﻿@model DataLayer.DataLayer.Check
+
+
+@{
+    ViewBag.Title = "Чек";
+}
+
+<h3>@ViewBag.Title</h3>
+<table>
+    <tr>
+        <td>Дата</td>
+        <td>@Model.Date</td>
+    </tr>
+    <tr>
+        <td>
+            Cумма
+        </td>
+        <td>@Model.Summa</td>
+    </tr>
+    <tr>
+        <td>Файл чека</td>
+        <td>
+            <a href="@Model.FileLink">@Model.FileLink</a>
+        </td>
+    </tr>
+</table>
+

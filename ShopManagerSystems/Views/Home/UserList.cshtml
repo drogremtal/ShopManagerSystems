@@ -24,6 +24,8 @@
                 <td>
                     <a asp-action="Details"  asp-controller="Home" asp-route-id="@item.Id">Детали</a>
                     <a asp-action="Edit"  asp-controller="Home" asp-route-id="@item.Id">Изменить</a>
+                    <a asp-action="Delete"  asp-controller="Home" asp-route-id="@item.Id">Удалить</a>
+                    <a asp-action="CreateCheck"  asp-controller="Home" asp-route-id="@item.Id">Добавить чек</a>
                     <a asp-action="GetCheck"  asp-controller="Home" asp-route-id="@item.Id">Получить чек</a>
                 </td>
             </tr>

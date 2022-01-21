@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ShopManagerSystems\ShopManagerSystems.csproj" />
+  </ItemGroup>
+
 </Project>

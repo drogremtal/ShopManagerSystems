@@ -48,7 +48,7 @@ namespace ShopManagerSystems.Controllers
         [HttpPost]
         public IActionResult CreateUser(UserCreateViewModel user)
         {
-            var mapper = new MapperConfiguration(cfg=>cfg.CreateMap<UserCreateViewModel,UserDTO>()).CreateMapper();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UserCreateViewModel, UserDTO>()).CreateMapper();
 
             var userDto = mapper.Map<UserCreateViewModel, UserDTO>(user);
             _Service.CreateUser(userDto);
@@ -58,132 +58,84 @@ namespace ShopManagerSystems.Controllers
 
         public IActionResult Details(int id)
         {
-            var userDetailsViewModel = from u in _DB.User
-                                       join ui in _DB.UserInformation
-                                       on u.Id equals ui.UserID
-
-                                       into UserInfo
-                                       from item in UserInfo.DefaultIfEmpty()
-                                       where u.Id == id
-                                       select new UserDetailsViewModel
-                                       {
-                                           UserId = u.Id,
-                                           LastName = u.LastName,
-                                           FirstName = u.FirstName,
-                                           PatronicName = u.PatronicName,
-                                           BirthDate = item.BirthDate,
-                                           Email = item.Email,
-                                           PhoneNum = item.PhoneNum
-                                       };
-            if (!userDetailsViewModel.Any())
-            {
-                return View("UserList");
-            }
-
-            return View(userDetailsViewModel.FirstOrDefault());
+            var userInfo = _Service.GetDetail(id);
+            var mapping = new MapperConfiguration(cfg => cfg.CreateMap<UserInformationDTO, UserInformationViewModel>()).CreateMapper();
+            var userInfoView = mapping.Map<UserInformationDTO, UserInformationViewModel>(userInfo);
+            return View(userInfoView);
         }
 
         public IActionResult Edit(int id)
         {
+            var userEdit = _Service.GetDetail(id);
 
+            var mapping = new MapperConfiguration(cfg => cfg.CreateMap<UserInformationDTO, UserInformationEditViewModel>()).CreateMapper();
+            var userInfoView = mapping.Map<UserInformationDTO, UserInformationEditViewModel>(userEdit);
 
-            var userDetailsViewModel = from u in _DB.User
-                                       join ui in _DB.UserInformation
-                                       on u.Id equals ui.UserID
-
-                                       into UserInfo
-                                       from item in UserInfo.DefaultIfEmpty()
-                                       where u.Id == id
-                                       select new UserDetailEditViewModel
-                                       {
-                                           UserId = u.Id,
-                                           LastName = u.LastName,
-                                           FirstName = u.FirstName,
-                                           PatronicName = u.PatronicName,
-                                           BirthDate = item.BirthDate,
-                                           Email = item.Email,
-                                           PhoneNum = item.PhoneNum
-                                       };
-
-            if (!userDetailsViewModel.Any())
+            if (userInfoView == null)
             {
                 return View("UserList");
             }
 
-            return View(userDetailsViewModel.FirstOrDefault());
+            return View(userInfoView);
         }
 
         [HttpPost]
-        public IActionResult Edit(UserDetailEditViewModel userDetailsViewModel)
+        public IActionResult Edit(UserInformationEditViewModel userDetailsViewModel)
         {
-            var mapConfig = new MapperConfiguration(cfg =>
-            {
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<UserInformationEditViewModel, UserInformationDTO>()).CreateMapper();
 
-                cfg.CreateMap<UserDetailEditViewModel, User>()
-                     .ForMember(pr => pr.Id, opt => opt.MapFrom(q => q.UserId))
-                     .ForMember(pr => pr.LastName, opt => opt.MapFrom(q => q.LastName))
-                     .ForMember(pr => pr.FirstName, opt => opt.MapFrom(q => q.FirstName))
-                     .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.PatronicName));
+            var UserInfoDTO = map.Map<UserInformationEditViewModel, UserInformationDTO>(userDetailsViewModel);
 
-                cfg.CreateMap<UserDetailEditViewModel, UserInformation>()
-                .ForMember(pr => pr.BirthDate, opt => opt.MapFrom(q => q.BirthDate))
-                .ForMember(pr => pr.Email, opt => opt.MapFrom(q => q.Email))
-                .ForMember(pr => pr.UserID, opt => opt.MapFrom(q => q.UserId))
-                .ForMember(pr => pr.PhoneNum, opt => opt.MapFrom(q => q.PhoneNum));
-            });
+            int id = _Service.EditSave(UserInfoDTO);
 
-            var map = new Mapper(mapConfig);
-
-            var user = map.Map<UserDetailEditViewModel, User>(userDetailsViewModel);
-            var userInformation = map.Map<UserDetailEditViewModel, UserInformation>(userDetailsViewModel);
-
-            _DB.User.Update(user);
-
-            _DB.SaveChanges();
-            _DB.UserInformation.Update(userInformation);
-            _DB.SaveChanges();
-
-            return RedirectToAction("Details", new { id = userDetailsViewModel.UserId });
+            return RedirectToAction("Details", new { id = id });
         }
 
         public IActionResult Delete(int id)
         {
-            var user = _DB.User.Find(id);
-            if (user != null)
-            {
-                _DB.User.Remove(user);
-                _DB.SaveChanges();
-            }
-
-            var userinfo = _DB.UserInformation.Where(q => q.UserID == id).FirstOrDefault();
-
-            if (userinfo != null)
-            {
-                _DB.UserInformation.Remove(userinfo);
-                _DB.SaveChanges();
-            }
-
+            _Service.Delete(id);
             return RedirectToAction("UserList");
         }
 
         [HttpPost]
-        public IActionResult CreateCheck(Check check)
+        public IActionResult CreateCheck(CheckViewModel check)
         {
-            _DB.Check.Add(check);
-            _DB.SaveChanges();
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckViewModel, CheckDTO>()).CreateMapper();
+
+            var checkDto = map.Map<CheckViewModel, CheckDTO>(check);
+
+            int id = _Service.CreateCheck(checkDto);
+
             return RedirectToAction("Check", new { id = check.Id });
         }
 
         public IActionResult CreateCheck(int id)
         {
-            return View(new Check() { UserId = id});
+            return View(new CheckViewModel() { UserId = id });
         }
 
         public IActionResult Check(int id)
         {
-            var check = _DB.Check.Find(id);
+            var checkDTO = _Service.GetCheck(id);
+
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>()).CreateMapper();
+
+            var check = map.Map<CheckDTO, CheckViewModel>(checkDTO);
+
             return View(check);
         }
+
+        public IActionResult CheckList(int id)
+        {
+            var ChecksDTO = _Service.GetChecks(id);
+
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>()).CreateMapper();
+
+            var CheckList = map.Map<IEnumerable<CheckDTO>, IEnumerable<CheckViewModel>>(ChecksDTO);
+
+            return View(ChecksDTO);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

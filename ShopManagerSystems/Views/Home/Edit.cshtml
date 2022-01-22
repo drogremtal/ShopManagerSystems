@@ -1,4 +1,4 @@
-﻿@model ShopManagerSystems.ViewModel.UserDetailEditViewModel
+﻿@model ShopManagerSystems.ViewModel.UserInformationEditViewModel
 
 @{
     ViewBag.Title = "Рекдактировать пользователя";
@@ -6,6 +6,7 @@
 
 <form asp-action="Edit" asp-controller="Home">
     <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+    <input type="hidden" asp-for="UIID" value="@Model.UIID"/>
     <div class="row g-3">
         <div class="form-group col-md-4">
             <label asp-for="LastName" class="control-label">Фамилия</label>

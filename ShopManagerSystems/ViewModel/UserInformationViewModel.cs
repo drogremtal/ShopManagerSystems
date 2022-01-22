@@ -1,6 +1,6 @@
 ﻿namespace ShopManagerSystems.ViewModel
 {
-    public class UserDetailsViewModel
+    public class UserInformationViewModel
     {
         public int UserId { get; set; }
         public string LastName { get; set; }

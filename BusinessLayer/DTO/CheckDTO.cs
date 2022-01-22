@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayer.DataLayer
+namespace Service.DTO
 {
-    public class Check
+    public class CheckDTO
     {
-
         public int Id { get; set; }
-        public int UserID { get; set; }
-        public string Date { get; set; }
+        public int UserId { get; set; }
+        public DateTime Date { get; set; }
         public decimal Summa { get; set; }
         public string FileLink { get; set; }
 

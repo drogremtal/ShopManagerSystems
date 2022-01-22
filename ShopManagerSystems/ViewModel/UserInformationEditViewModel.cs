@@ -1,8 +1,9 @@
 ﻿namespace ShopManagerSystems.ViewModel
 {
-    public class UserDetailEditViewModel
+    public class UserInformationEditViewModel
     {
         public int UserId { get; set; }
+        public int UIID { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string PatronicName { get; set; }

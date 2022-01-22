@@ -6,8 +6,8 @@ using DataLayer;
 using DataLayer.DataLayer;
 using AutoMapper;
 using ShopManagerSystems.ViewModel;
-using ShopManagerSystems.Service;
-using System.Linq;
+using BusinessLayer.Service;
+using Service.DTO;
 
 namespace ShopManagerSystems.Controllers
 {
@@ -15,12 +15,13 @@ namespace ShopManagerSystems.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDBContext _DB;
-        //private readonly DTOService _Service;
+        private readonly IDTOService _Service;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDBContext dBContext)
+        public HomeController(ILogger<HomeController> logger, ApplicationDBContext dBContext, IDTOService dTOService)
         {
             _logger = logger;
             _DB = dBContext;
+            _Service = dTOService;
         }
 
         public IActionResult Index()
@@ -30,7 +31,12 @@ namespace ShopManagerSystems.Controllers
 
         public IActionResult UserList()
         {
-            var UsersList = _DB.User.ToList();
+            var Users = _Service.GetUsers();
+
+            var mapper = new MapperConfiguration(cgf => cgf.CreateMap<UserDTO, UserListViewModel>()).CreateMapper();
+
+            var UsersList = mapper.Map<IEnumerable<UserDTO>, List<UserListViewModel>>(Users);
+
             return View(UsersList);
         }
         public IActionResult CreateUser()
@@ -40,10 +46,13 @@ namespace ShopManagerSystems.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateUser(User user)
+        public IActionResult CreateUser(UserCreateViewModel user)
         {
-            _DB.User.Add(user);
-            _DB.SaveChanges();
+            var mapper = new MapperConfiguration(cfg=>cfg.CreateMap<UserCreateViewModel,UserDTO>()).CreateMapper();
+
+            var userDto = mapper.Map<UserCreateViewModel, UserDTO>(user);
+            _Service.CreateUser(userDto);
+
             return RedirectToAction("UserList");
         }
 
@@ -61,7 +70,7 @@ namespace ShopManagerSystems.Controllers
                                            UserId = u.Id,
                                            LastName = u.LastName,
                                            FirstName = u.FirstName,
-                                           PatronicName = u.Patronic,
+                                           PatronicName = u.PatronicName,
                                            BirthDate = item.BirthDate,
                                            Email = item.Email,
                                            PhoneNum = item.PhoneNum
@@ -90,7 +99,7 @@ namespace ShopManagerSystems.Controllers
                                            UserId = u.Id,
                                            LastName = u.LastName,
                                            FirstName = u.FirstName,
-                                           PatronicName = u.Patronic,
+                                           PatronicName = u.PatronicName,
                                            BirthDate = item.BirthDate,
                                            Email = item.Email,
                                            PhoneNum = item.PhoneNum
@@ -114,7 +123,7 @@ namespace ShopManagerSystems.Controllers
                      .ForMember(pr => pr.Id, opt => opt.MapFrom(q => q.UserId))
                      .ForMember(pr => pr.LastName, opt => opt.MapFrom(q => q.LastName))
                      .ForMember(pr => pr.FirstName, opt => opt.MapFrom(q => q.FirstName))
-                     .ForMember(pr => pr.Patronic, opt => opt.MapFrom(q => q.PatronicName));
+                     .ForMember(pr => pr.PatronicName, opt => opt.MapFrom(q => q.PatronicName));
 
                 cfg.CreateMap<UserDetailEditViewModel, UserInformation>()
                 .ForMember(pr => pr.BirthDate, opt => opt.MapFrom(q => q.BirthDate))

@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<DataLayer.DataLayer.User>
+@model IEnumerable<ShopManagerSystems.ViewModel.UserListViewModel>
 @{
     ViewBag.Title = "Все клиенты";
 }
@@ -20,7 +20,7 @@
                 <td>@item.Id</td>
                 <td>@item.LastName</td>
                 <td>@item.FirstName</td>
-                <td>@item.Patronic</td>
+                <td>@item.PatronicName</td>
                 <td>
                     <a asp-action="Details"  asp-controller="Home" asp-route-id="@item.Id">Детали</a>
                     <a asp-action="Edit"  asp-controller="Home" asp-route-id="@item.Id">Изменить</a>

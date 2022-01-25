@@ -4,7 +4,7 @@
     ViewBag.Title = "Список чеков";
 }
 
-<a asp-action='CreateCheck'>Добавить пользователя</a>
+<a asp-action="CreateCheck"  asp-controller="Home" asp-route-id="@ViewBag.UserId">Добавить чек</a>
 <table class='table'>
 
         <tr>

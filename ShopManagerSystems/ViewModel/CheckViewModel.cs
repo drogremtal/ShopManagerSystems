@@ -6,6 +6,6 @@
         public int UserId { get; set; }
         public DateTime Date { get; set; }
         public decimal Summa { get; set; }
-        public string FileLink { get; set; }
+        public IFormFile FileLink { get; set; }
     }
 }

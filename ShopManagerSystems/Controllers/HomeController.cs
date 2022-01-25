@@ -9,6 +9,7 @@ using ShopManagerSystems.ViewModel;
 using BusinessLayer.Service;
 using Service.DTO;
 
+
 namespace ShopManagerSystems.Controllers
 {
     public class HomeController : Controller
@@ -16,6 +17,7 @@ namespace ShopManagerSystems.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDBContext _DB;
         private readonly IDTOService _Service;
+
 
         public HomeController(ILogger<HomeController> logger, ApplicationDBContext dBContext, IDTOService dTOService)
         {
@@ -100,13 +102,26 @@ namespace ShopManagerSystems.Controllers
         [HttpPost]
         public IActionResult CreateCheck(CheckViewModel check)
         {
-            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckViewModel, CheckDTO>()).CreateMapper();
+            if (check.FileLink !=null)
+            {
+                string path = Path.Combine("Upload", check.Id.ToString(), check.FileLink.FileName);
+                using (var filestream = new FileStream(path, FileMode.Create))
+                {
+                    check.FileLink.CopyTo(filestream);
+                }
+         
+            }
+
+
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckViewModel, CheckDTO>()
+            .ForMember(q=>q.FileLink,src=>src.MapFrom(t=>t.FileLink.FileName))
+            ).CreateMapper();
 
             var checkDto = map.Map<CheckViewModel, CheckDTO>(check);
 
             int id = _Service.CreateCheck(checkDto);
 
-            return RedirectToAction("Check", new { id = check.Id });
+            return RedirectToAction("Check", new { id = id });
         }
 
         public IActionResult CreateCheck(int id)
@@ -129,11 +144,15 @@ namespace ShopManagerSystems.Controllers
         {
             var ChecksDTO = _Service.GetChecks(id);
 
-            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>()).CreateMapper();
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>().
+            ForMember(pr=>pr.FileLink.FileName,src=>src.MapFrom(q=>Path.Combine("Upload",id.ToString(), q.FileLink)))).
+            CreateMapper();
 
             var CheckList = map.Map<IEnumerable<CheckDTO>, IEnumerable<CheckViewModel>>(ChecksDTO);
 
-            return View(ChecksDTO);
+            ViewBag.UserId = id;
+
+            return View(CheckList);
         }
 
 

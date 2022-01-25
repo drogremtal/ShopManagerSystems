@@ -13,7 +13,7 @@ namespace DataLayer.DataLayer
         public int UserID { get; set; }
         public string Date { get; set; }
         public decimal Summa { get; set; }
-        public string FileLink { get; set; }
+        public string? FileLink { get; set; }
 
     }
 }

@@ -21,6 +21,7 @@ namespace BusinessLayer.Service
             var check = map.Map<CheckDTO, Check>(checkDTO);
 
             _DB.Check.Add(check);
+            _DB.SaveChanges();
 
             return check.Id;
 
@@ -109,10 +110,8 @@ namespace BusinessLayer.Service
 
         public IEnumerable<CheckDTO> GetChecks(int userID)
         {
-            var Checks = _DB.Check.ToList();
-
+            var Checks = _DB.Check.Where(q=>q.UserID == userID).ToList();
             var map = new MapperConfiguration(cfg => cfg.CreateMap<Check, CheckDTO>()).CreateMapper();
-
             var ChecksDTO = map.Map<IEnumerable<Check>, List<CheckDTO>>(Checks);
 
             return ChecksDTO;

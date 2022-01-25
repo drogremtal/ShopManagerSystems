@@ -4,7 +4,7 @@
     ViewBag.Title = "Создание чека";
 }
 <h3>@ViewBag.Title</h3>
-<form asp-action="CreateCheck" asp-controller="Home">
+<form asp-action="CreateCheck" asp-controller="Home" enctype="multipart/form-data">
     <input type="hidden" asp-for = "UserId" value ="@Model.UserId" />
     <input type="hidden" asp-for = "Id" value ="@Model.Id" />
     <div class="row g-3">

@@ -8,6 +8,7 @@ using AutoMapper;
 using ShopManagerSystems.ViewModel;
 using BusinessLayer.Service;
 using Service.DTO;
+using System.IO;
 
 
 namespace ShopManagerSystems.Controllers
@@ -102,19 +103,29 @@ namespace ShopManagerSystems.Controllers
         [HttpPost]
         public IActionResult CreateCheck(CheckViewModel check)
         {
-            if (check.FileLink !=null)
+            if (check.File !=null)
             {
-                string path = Path.Combine("Upload", check.Id.ToString(), check.FileLink.FileName);
+                if (!Directory.Exists("Upload"))
+                {
+                    Directory.CreateDirectory("Upload");
+                }
+                if (!Directory.Exists(Path.Combine("Upload",check.UserId.ToString())))
+                {
+                    Directory.CreateDirectory(Path.Combine("Upload", check.UserId.ToString()));
+                }
+
+
+                string path = Path.Combine("Upload", check.UserId.ToString(), check.File.FileName);
                 using (var filestream = new FileStream(path, FileMode.Create))
                 {
-                    check.FileLink.CopyTo(filestream);
+                    check.File.CopyTo(filestream);
                 }
          
             }
 
 
             var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckViewModel, CheckDTO>()
-            .ForMember(q=>q.FileLink,src=>src.MapFrom(t=>t.FileLink.FileName))
+            .ForMember(q=>q.FileLink,src=>src.MapFrom(t=>t.File.FileName))
             ).CreateMapper();
 
             var checkDto = map.Map<CheckViewModel, CheckDTO>(check);
@@ -145,14 +156,25 @@ namespace ShopManagerSystems.Controllers
             var ChecksDTO = _Service.GetChecks(id);
 
             var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>().
-            ForMember(pr=>pr.FileLink.FileName,src=>src.MapFrom(q=>Path.Combine("Upload",id.ToString(), q.FileLink)))).
+            ForMember(src=>src.FileLink,q=>q.MapFrom(q=>Path.Combine("Upload",q.UserId.ToString(), q.FileLink)))).
             CreateMapper();
 
             var CheckList = map.Map<IEnumerable<CheckDTO>, IEnumerable<CheckViewModel>>(ChecksDTO);
 
+
+
             ViewBag.UserId = id;
 
             return View(CheckList);
+        }
+
+        public IActionResult DownloadFile(string link)
+        {
+            var fileBytes = System.IO.File.ReadAllBytes(link);
+            var fileName = link.Split('\\').Last();
+
+            return  File(fileBytes, "application/force-download", fileName);
+
         }
 
 

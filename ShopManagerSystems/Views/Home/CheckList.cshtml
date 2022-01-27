@@ -9,8 +9,8 @@
 
     <tr>
         <th>ID</th>
-        <th>Дата</th>
-        <th>Сумма</th>
+        <th> <a asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.DateSort">Дата</a></th>
+        <th><a asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.SummaSort">Сумма</a></a></th>
         <th>Файл</th>
         <th></th>
     </tr>

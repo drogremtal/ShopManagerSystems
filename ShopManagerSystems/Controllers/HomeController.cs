@@ -103,13 +103,13 @@ namespace ShopManagerSystems.Controllers
         [HttpPost]
         public IActionResult CreateCheck(CheckViewModel check)
         {
-            if (check.File !=null)
+            if (check.File != null)
             {
                 if (!Directory.Exists("Upload"))
                 {
                     Directory.CreateDirectory("Upload");
                 }
-                if (!Directory.Exists(Path.Combine("Upload",check.UserId.ToString())))
+                if (!Directory.Exists(Path.Combine("Upload", check.UserId.ToString())))
                 {
                     Directory.CreateDirectory(Path.Combine("Upload", check.UserId.ToString()));
                 }
@@ -120,12 +120,12 @@ namespace ShopManagerSystems.Controllers
                 {
                     check.File.CopyTo(filestream);
                 }
-         
+
             }
 
 
             var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckViewModel, CheckDTO>()
-            .ForMember(q=>q.FileLink,src=>src.MapFrom(t=>t.File.FileName))
+            .ForMember(q => q.FileLink, src => src.MapFrom(t => t.File.FileName))
             ).CreateMapper();
 
             var checkDto = map.Map<CheckViewModel, CheckDTO>(check);
@@ -151,18 +151,30 @@ namespace ShopManagerSystems.Controllers
             return View(check);
         }
 
-        public IActionResult CheckList(int id)
+        public IActionResult CheckList(int id, SortState sort = SortState.DateDesc)
         {
             var ChecksDTO = _Service.GetChecks(id);
 
             var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>().
-            ForMember(src=>src.FileLink,q=>q.MapFrom(q=>Path.Combine("Upload",q.UserId.ToString(), q.FileLink)))).
+            ForMember(src => src.FileLink, q => q.MapFrom(q => Path.Combine("Upload", q.UserId.ToString(), q.FileLink)))).
             CreateMapper();
 
-            var CheckList = map.Map<IEnumerable<CheckDTO>, IEnumerable<CheckViewModel>>(ChecksDTO);
+            var CheckList = map.Map<IEnumerable<CheckDTO>, ICollection<CheckViewModel>>(ChecksDTO);
+
+
+            CheckList = sort switch
+            {
+                SortState.DateAsc => CheckList.OrderBy(q => q.Date).ToList(),
+                SortState.DateDesc => CheckList.OrderByDescending(q => q.Date).ToList(),
+                SortState.SummaAsc => CheckList.OrderBy(q => q.Summa).ToList(),
+                SortState.SummaDesc => CheckList.OrderByDescending(q => q.Summa).ToList(),
+                _ => CheckList.OrderBy(q => q.Id).ToList(),
+            };
 
 
 
+            ViewBag.DateSort = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewBag.SummaSort = sort == SortState.SummaAsc ? SortState.SummaDesc : SortState.SummaAsc;
             ViewBag.UserId = id;
 
             return View(CheckList);
@@ -173,7 +185,7 @@ namespace ShopManagerSystems.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(link);
             var fileName = link.Split('\\').Last();
 
-            return  File(fileBytes, "application/force-download", fileName);
+            return File(fileBytes, "application/force-download", fileName);
 
         }
 

@@ -9,44 +9,22 @@
 
     <tr>
         <th>ID</th>
-        <th> <a asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.DateSort">Дата</a></th>
-        <th><a asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.SummaSort">Сумма</a></a></th>
+        <th> <a   class="text-decoration-none"  asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.DateSort">Дата</a></th>
+        <th><a  class="text-decoration-none"  asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.SummaSort">Сумма</a></a></th>
         <th>Файл</th>
         <th></th>
     </tr>
     @foreach (var item in Model)
     {
         <tr>
-            <td>@item.Id</td>
+            <td><a asp-action="Check" asp-route-id="@item.Id"  class="text-decoration-none" >@item.Id</a></td>
             <td>@item.Date</td>
             <td>@item.Summa</td>
             <td>
-                <a asp-action="DownloadFile"  asp-controller="Home" asp-route-link="@item.FileLink" >  @item.FileLink</a>
-                
+                <a asp-action="DownloadFile" asp-controller="Home" asp-route-link="@item.FileLink">  @item.FileLink</a>
+
             </td>
         </tr>
     }
 </table>
-@*
-<script>
 
-    $().ready(function()
-    {
-        $("a.file").click(function(){
-            let link = this.href;
-
-           $.ajax({
-	url: @Url.Action(''),         /* Куда пойдет запрос */
-	method: 'get',             /* Метод передачи (post или get) */
-	dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
-	data: {link: link},     /* Параметры передаваемые в запросе. */
-	success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
-		alert(data);            /* В переменной data содержится ответ от index.php. */
-	}
-});
-
-        });
-    });
-
-</script>
-*@

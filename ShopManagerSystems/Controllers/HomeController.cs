@@ -9,7 +9,7 @@ using ShopManagerSystems.ViewModel;
 using BusinessLayer.Service;
 using Service.DTO;
 using System.IO;
-
+using DNTBreadCrumb.Core;
 
 namespace ShopManagerSystems.Controllers
 {
@@ -19,27 +19,25 @@ namespace ShopManagerSystems.Controllers
         private readonly ApplicationDBContext _DB;
         private readonly IDTOService _Service;
 
-
+[BreadCrumb(Title = "Home", UseDefaultRouteUrl = true, Order = 0, IgnoreAjaxRequests = true)]
         public HomeController(ILogger<HomeController> logger, ApplicationDBContext dBContext, IDTOService dTOService)
         {
             _logger = logger;
             _DB = dBContext;
             _Service = dTOService;
         }
-
+        [BreadCrumb(Title = "Главная", Order = 1, IgnoreAjaxRequests = true)]
         public IActionResult Index()
         {
             return View();
         }
 
+        [BreadCrumb(Title = "Список клиентов", Order = 1, IgnoreAjaxRequests = true)]
         public IActionResult UserList()
         {
             var Users = _Service.GetUsers();
-
             var mapper = new MapperConfiguration(cgf => cgf.CreateMap<UserDTO, UserListViewModel>()).CreateMapper();
-
             var UsersList = mapper.Map<IEnumerable<UserDTO>, List<UserListViewModel>>(Users);
-
             return View(UsersList);
         }
         public IActionResult CreateUser()

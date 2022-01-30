@@ -9,20 +9,19 @@
 
     <tr>
         <th>ID</th>
-        <th> <a   class="text-decoration-none"  asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.DateSort">Дата</a></th>
-        <th><a  class="text-decoration-none"  asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.SummaSort">Сумма</a></a></th>
+        <th> <a class="text-decoration-none" asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.DateSort">Дата</a></th>
+        <th><a class="text-decoration-none" asp-action="CheckList" asp-route-id="@ViewBag.UserId" asp-route-sort="@ViewBag.SummaSort">Сумма</a></a></th>
         <th>Файл</th>
         <th></th>
     </tr>
     @foreach (var item in Model)
     {
         <tr>
-            <td><a asp-action="Check" asp-route-id="@item.Id"  class="text-decoration-none" >@item.Id</a></td>
+            <td><a asp-action="Check" asp-route-id="@item.Id" class="text-decoration-none">@item.Id</a></td>
             <td>@item.Date</td>
             <td>@item.Summa</td>
             <td>
-                <a asp-action="DownloadFile" asp-controller="Home" asp-route-link="@item.FileLink">  @item.FileLink</a>
-
+                <a asp-action="DownloadFile" asp-controller="Home" asp-route-link="@item.FileLink">  @item.FileName</a>
             </td>
         </tr>
     }

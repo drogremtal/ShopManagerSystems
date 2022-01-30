@@ -7,6 +7,8 @@
         public DateTime Date { get; set; }
         public decimal Summa { get; set; }
         public string FileLink { get; set; }
+
+        public string FileName { get; set; }
         public IFormFile File { get; set; }
     }
 }

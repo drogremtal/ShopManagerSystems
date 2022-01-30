@@ -19,20 +19,20 @@ namespace ShopManagerSystems.Controllers
         private readonly ApplicationDBContext _DB;
         private readonly IDTOService _Service;
 
-[BreadCrumb(Title = "Home", UseDefaultRouteUrl = true, Order = 0, IgnoreAjaxRequests = true)]
+
         public HomeController(ILogger<HomeController> logger, ApplicationDBContext dBContext, IDTOService dTOService)
         {
             _logger = logger;
             _DB = dBContext;
             _Service = dTOService;
         }
-        [BreadCrumb(Title = "Главная", Order = 1, IgnoreAjaxRequests = true)]
+
         public IActionResult Index()
         {
             return View();
         }
 
-        [BreadCrumb(Title = "Список клиентов", Order = 1, IgnoreAjaxRequests = true)]
+
         public IActionResult UserList()
         {
             var Users = _Service.GetUsers();
@@ -142,7 +142,10 @@ namespace ShopManagerSystems.Controllers
         {
             var checkDTO = _Service.GetCheck(id);
 
-            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>()).CreateMapper();
+            var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>()
+            .ForMember(src=>src.FileLink,q=>q.MapFrom(q => Path.Combine("Upload", q.UserId.ToString(), q.FileLink)))
+            .ForMember(src=>src.FileName,q=>q.MapFrom(q=>q.FileLink))
+            ).CreateMapper();
 
             var check = map.Map<CheckDTO, CheckViewModel>(checkDTO);
 
@@ -154,7 +157,9 @@ namespace ShopManagerSystems.Controllers
             var ChecksDTO = _Service.GetChecks(id);
 
             var map = new MapperConfiguration(cfg => cfg.CreateMap<CheckDTO, CheckViewModel>().
-            ForMember(src => src.FileLink, q => q.MapFrom(q => Path.Combine("Upload", q.UserId.ToString(), q.FileLink)))).
+            ForMember(src => src.FileLink, q => q.MapFrom(q => Path.Combine("Upload", q.UserId.ToString(), q.FileLink)))
+            .ForMember(src =>src.FileName,q=>q.MapFrom(q=>q.FileLink))
+            ).
             CreateMapper();
 
             var CheckList = map.Map<IEnumerable<CheckDTO>, ICollection<CheckViewModel>>(ChecksDTO);
@@ -180,10 +185,18 @@ namespace ShopManagerSystems.Controllers
 
         public IActionResult DownloadFile(string link)
         {
-            var fileBytes = System.IO.File.ReadAllBytes(link);
-            var fileName = link.Split('\\').Last();
+            try
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(link);
+                var fileName = link.Split('\\').Last();
 
-            return File(fileBytes, "application/force-download", fileName);
+                return File(fileBytes, "application/force-download", fileName);
+            }
+
+            catch
+            {
+                return null;
+            }
 
         }
 

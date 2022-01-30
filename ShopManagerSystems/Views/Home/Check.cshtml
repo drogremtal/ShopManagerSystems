@@ -20,7 +20,7 @@
     <tr>
         <td>Файл чека</td>
         <td>
-            <a href="@Model.FileLink">@Model.FileLink</a>
+            <a asp-action="DownloadFile" asp-controller="Home" asp-route-link="@Model.FileLink">  @Model.FileName</a>
         </td>
     </tr>
 </table>
